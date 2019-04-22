@@ -29,7 +29,7 @@ function createuser()
 			echo -e "User ${Yellow} $NEWUSER ${NC} is already exists in /etc/passwd. Please choose another name"
 			continue
 		fi
-	
+
 		echo -e "new user is ${Green} $NEWUSER ${NC}" 
 		flagEnterUser=1
 	
@@ -41,9 +41,12 @@ function createuser()
 	# approve changes to the system
 	#useradd -s /bin/bash -p $(openssl passwd -1 ${NEWPASSWD}) -d ${NEWHOMEFOLDER} ${NEWUSER}
 	useradd -s /bin/bash ${NEWUSER}
+	usermod -G wheel ${NEWUSER}
 	echo ${NEWUSER}:${NEWPASSWD} | chpasswd
 	#mkdir -p ${NEWHOMEFOLDER}
 	#chown ${NEWUSER}:${NEWUSER} ${NEWHOMEFOLDER}
+	EXPIRATION_DATE=$(date -d "$(date +%Y%m%d)+3 month" +%Y-%m-%d)
+	chage -E "${EXPIRATION_DATE}" ${NEWUSER}
 }
 
 # main functionality
