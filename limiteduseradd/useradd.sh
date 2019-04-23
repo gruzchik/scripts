@@ -49,6 +49,14 @@ function createuser()
 	chage -E "${EXPIRATION_DATE}" ${NEWUSER}
 }
 
+function update_expiration_date()
+{
+	read -p "Please enter the name of user:" CURRENTUSER
+	EXPIRATION_DATE=$(date -d "$(date +%Y%m%d)+3 month" +%Y-%m-%d)
+	chage -E "${EXPIRATION_DATE}" ${CURRENTUSER}
+	echo -e "Expiration date for ${Green} $CURRENTUSER ${NC} was updated, and now this is ${EXPIRATION_DATE}"
+}
+
 # main functionality
 echo ""
 echo "Please select operations with backup users."
@@ -75,7 +83,7 @@ read -p "Your choose is: " opts
                 ;;
 		U | u)
 		        echo 'Update expiration date'
-			#update_expiration_date
+			update_expiration_date
 			exit
 			;;
                 *)
