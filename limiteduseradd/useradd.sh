@@ -57,6 +57,12 @@ function update_expiration_date()
 	echo -e "Expiration date for ${Green} $CURRENTUSER ${NC} was updated, and now this is ${EXPIRATION_DATE}"
 }
 
+function update_expiration_date()
+{
+	read -p "Please enter the name of user for deletion:" DELETEUSER
+	userdel ${DELETEUSER}
+}
+
 # main functionality
 echo ""
 echo "Please select operations with backup users."
@@ -78,14 +84,14 @@ read -p "Your choose is: " opts
                 ;;
                 D | d)
                         echo 'Delete user'
-                        #deleteuser
+                        deleteuser
                         exit
                 ;;
 		U | u)
 		        echo 'Update expiration date'
 			update_expiration_date
 			exit
-			;;
+		;;
                 *)
                         echo "Option is not correct. Please make your choose"
                 ;;
