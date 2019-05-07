@@ -7,7 +7,7 @@ Cyan='\e[0;36m'
 Yellow='\e[0;33m'
 NC='\e[0m'
 
-function createuser()
+function create_user()
 {
 	# enter username
 	flagEnterUser=0
@@ -57,10 +57,16 @@ function update_expiration_date()
 	echo -e "Expiration date for ${Green} $CURRENTUSER ${NC} was updated, and now this is ${EXPIRATION_DATE}"
 }
 
-function update_expiration_date()
+function disable_user()
 {
-	read -p "Please enter the name of user for deletion:" DELETEUSER
-	userdel ${DELETEUSER}
+	read -p "Please enter the name of user for disable:" DISABLEUSER
+	usermod -s /sbin/nologin ${DISABLEUSER}
+}
+
+function enable_user()
+{
+        read -p "Please enter the name of user for disable:" ENABLEUSER
+        usermod -s /bin/bash ${ENABLEUSER}
 }
 
 # main functionality
@@ -69,7 +75,8 @@ echo "Please select operations with backup users."
 echo -en "${Cyan}"
 cat << 'EOF'
 Create user (C)
-Delete user (D)
+Deactivate user (D)
+Activate user (E)
 Update expiration date (U)
 EOF
 echo -en "${NC}"
@@ -79,14 +86,19 @@ read -p "Your choose is: " opts
         case "${opts}" in
                 C | c)
                         echo 'Create user'
-                        createuser
+                        create_user
                         exit
                 ;;
                 D | d)
-                        echo 'Delete user'
-                        deleteuser
+                        echo 'Deactivate user'
+                        disable_user
                         exit
                 ;;
+		E | e)
+			echo 'Activate user'
+			enable_user
+			exit
+		;;
 		U | u)
 		        echo 'Update expiration date'
 			update_expiration_date
