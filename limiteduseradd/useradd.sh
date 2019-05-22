@@ -7,6 +7,18 @@ Cyan='\e[0;36m'
 Yellow='\e[0;33m'
 NC='\e[0m'
 
+function check_existing_name()
+{
+	IFEXISTS=0
+
+	# check user to exists in /etc/passwd
+	for line in $(cat /etc/passwd | awk 'BEGIN{FS=":"}{print $1}' |grep $1); do
+		if [[ $line == $1 ]]; then
+			IFEXISTS=1
+		fi
+	done
+}
+
 function create_user()
 {
 	# enter username
@@ -15,16 +27,8 @@ function create_user()
 	while [[ $flagEnterUser != 1 ]]; do
 		IFEXISTS=0
 		read -p "Please enter the name of user:" NEWUSER
+		check_existing_name ${NEWUSER}		
 		
-		#IFEXISTS=$(cat /etc/passwd | awk 'BEGIN{FS=":"}{print $1}' |grep $NEWUSER| wc -l)
-		
-		# check user to exists in /etc/passwd
-		for line in $(cat /etc/passwd | awk 'BEGIN{FS=":"}{print $1}' |grep $NEWUSER); do
-			if [[ $line == $NEWUSER ]]; then
-				IFEXISTS=1
-			fi
-		done
-	
 		if [[ $IFEXISTS == 1 ]]; then
 			echo -e "User ${Yellow} $NEWUSER ${NC} is already exists in /etc/passwd. Please choose another name"
 			continue
@@ -66,27 +70,18 @@ function disable_user()
 	while [[ $flagEnterUser != 1 ]]; do
 		IFEXISTS=0
 		read -p "Please enter the name of user for disable:" DISABLEUSER
+		check_existing_name ${DISABLEUSER}
 		
-		#IFEXISTS=$(cat /etc/passwd | awk 'BEGIN{FS=":"}{print $1}' |grep $NEWUSER| wc -l)
-		
-		# check user to exists in /etc/passwd
-		for line in $(cat /etc/passwd | awk 'BEGIN{FS=":"}{print $1}' |grep $NEWUSER); do
-			if [[ $line == $DISABLEUSER ]]; then
-				IFEXISTS=1
-			fi
-		done
-	
-		if [[ $IFEXISTS == 1 ]]; then
-			echo -e "User ${Yellow} $NEWUSER ${NC} does not exists in /etc/passwd. Please choose another name"
+		if [[ $IFEXISTS != 1 ]]; then
+			echo -e "User ${Yellow} ${DISABLEUSER} ${NC} does not exists in /etc/passwd. Please choose another name"
 			continue
 		fi
 
-		echo -e "the user ${Green} $DISABLEUSER ${NC} will be deactivate" 
+		echo -e "the user ${Green} $DISABLEUSER ${NC} will be deactivate.." 
 		flagEnterUser=1
 	
 	done
 
-	#read -p "Please enter the name of user for disable:" DISABLEUSER
 	usermod -s /sbin/nologin ${DISABLEUSER}
 	echo -e "Deactivation of user ${Green} $DISABLEUSER ${NC} has been applied"
 }
