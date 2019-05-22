@@ -59,8 +59,36 @@ function update_expiration_date()
 
 function disable_user()
 {
-	read -p "Please enter the name of user for disable:" DISABLEUSER
+
+	# enter username
+	flagEnterUser=0
+	
+	while [[ $flagEnterUser != 1 ]]; do
+		IFEXISTS=0
+		read -p "Please enter the name of user for disable:" DISABLEUSER
+		
+		#IFEXISTS=$(cat /etc/passwd | awk 'BEGIN{FS=":"}{print $1}' |grep $NEWUSER| wc -l)
+		
+		# check user to exists in /etc/passwd
+		for line in $(cat /etc/passwd | awk 'BEGIN{FS=":"}{print $1}' |grep $NEWUSER); do
+			if [[ $line == $DISABLEUSER ]]; then
+				IFEXISTS=1
+			fi
+		done
+	
+		if [[ $IFEXISTS == 1 ]]; then
+			echo -e "User ${Yellow} $NEWUSER ${NC} does not exists in /etc/passwd. Please choose another name"
+			continue
+		fi
+
+		echo -e "the user ${Green} $DISABLEUSER ${NC} will be deactivate" 
+		flagEnterUser=1
+	
+	done
+
+	#read -p "Please enter the name of user for disable:" DISABLEUSER
 	usermod -s /sbin/nologin ${DISABLEUSER}
+	echo -e "Deactivation of user ${Green} $DISABLEUSER ${NC} has been applied"
 }
 
 function enable_user()
