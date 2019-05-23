@@ -94,7 +94,7 @@ function enable_user()
 
 # main functionality
 echo ""
-echo "Please select operations with backup users."
+echo "Please select operations with user."
 echo -en "${Cyan}"
 cat << 'EOF'
 Create user (C)
@@ -103,7 +103,7 @@ Activate user (E)
 Update expiration date (U)
 EOF
 echo -en "${NC}"
-#read -p "Please select operations with backup users. Create user(C) Delete user(D) Update user(U) Update quota(Q) Show limits for users(S):" opts
+
 read -p "Your choose is: " opts
 
         case "${opts}" in
@@ -131,4 +131,4 @@ read -p "Your choose is: " opts
                         echo "Option is not correct. Please make your choose"
                 ;;
 
-esac
+	esac
